@@ -3,11 +3,17 @@ package in.springboot.Insurance_Report.service;
 import in.springboot.Insurance_Report.entity.CitizenPlan;
 import in.springboot.Insurance_Report.repo.CitizenPlanRepository;
 import in.springboot.Insurance_Report.request.SearchRequest;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 @Service
@@ -40,13 +46,51 @@ public class ReportServiceImpl implements ReportService {
         if(null!=request.getGender() && !"".equals(request.getGender())){
             entity.setGender((request.getGender()));
         }
+
+//        if(null!=request.getPlanStartDate() && !"".equals(request.getPlanStartDate())){
+//            String startDate = request.getPlanStartDate();
+//            entity.setPlanStartDate((request.getPlanStartDate()));
+//        }
         return planRepo.findAll(Example.of(entity));
     }
 
     @Override
-    public boolean exportToExcel() {
+    public boolean exportToExcel(HttpServletResponse response) throws Exception{
 
-        return false;
+        Workbook workbook = new HSSFWorkbook();
+        Sheet sheet = workbook.createSheet("plans-data");
+        Row headerRow = sheet.createRow(0);
+
+        headerRow.createCell(0).setCellValue("ID");
+        headerRow.createCell(1).setCellValue("Citizen Name");
+        headerRow.createCell(2).setCellValue("Gender");
+        headerRow.createCell(3).setCellValue("Plan Name");
+        headerRow.createCell(4).setCellValue("Plan Status");
+        headerRow.createCell(5).setCellValue("Plan Start Date");
+        headerRow.createCell(6).setCellValue("Plan End Date");
+
+        List<CitizenPlan> records = planRepo.findAll();
+
+        int dataRow = 1;
+
+        for(CitizenPlan plan : records){
+            Row dataRows = sheet.createRow(dataRow);
+            dataRows.createCell(0).setCellValue(plan.getCitizenId());
+            dataRows.createCell(1).setCellValue(plan.getCitizenName());
+            dataRows.createCell(2).setCellValue(plan.getGender());
+            dataRows.createCell(3).setCellValue(plan.getPlanName());
+            dataRows.createCell(4).setCellValue(plan.getPlanStatus());
+            dataRows.createCell(5).setCellValue(plan.getPlanStartDate());
+            dataRows.createCell(6).setCellValue(plan.getPlanEndDate());
+
+            dataRow++;
+        }
+
+        ServletOutputStream outputStream = response.getOutputStream();
+        workbook.write(outputStream);
+        workbook.close();
+
+        return true;
     }
 
     @Override

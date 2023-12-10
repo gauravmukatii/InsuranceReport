@@ -9,11 +9,22 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import javax.servlet.http.HttpServletResponse;
+
 @Controller
 public class ReportController {
 
     @Autowired
     private ReportService service;
+
+    @GetMapping("/excel")
+    public void excelExport(HttpServletResponse response) throws Exception{
+        response.setContentType("application/octet-stream");
+
+        response.addHeader("content-Disposition", "attachment;filename=plans.xls");
+
+        service.exportToExcel(response);
+    }
 
     @PostMapping("/search")
     public String handleSearch(@ModelAttribute("search") SearchRequest searchRequest, Model model){
