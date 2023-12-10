@@ -9,7 +9,7 @@ public interface ReportService {
 
     public List<String> getPlanName();
     public List<String> getPlanStatus();
-    public List<CitizenPlan> search(SearchRequest request);
+    public List<CitizenPlan> getPlans(SearchRequest request);
     public boolean exportToExcel();
     public boolean exportToPdf();
 

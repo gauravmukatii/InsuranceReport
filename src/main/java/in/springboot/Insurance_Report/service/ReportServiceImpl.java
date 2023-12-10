@@ -3,7 +3,9 @@ package in.springboot.Insurance_Report.service;
 import in.springboot.Insurance_Report.entity.CitizenPlan;
 import in.springboot.Insurance_Report.repo.CitizenPlanRepository;
 import in.springboot.Insurance_Report.request.SearchRequest;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,8 +27,20 @@ public class ReportServiceImpl implements ReportService {
     }
 
     @Override
-    public List<CitizenPlan> search(SearchRequest request) {
-        return planRepo.findAll();
+    public List<CitizenPlan> getPlans(SearchRequest request) {
+        CitizenPlan entity = new CitizenPlan();
+        if(null!=request.getPlanName() && !"".equals(request.getPlanName())){
+            entity.setPlanName((request.getPlanName()));
+        }
+
+        if(null!=request.getPlanStatus() && !"".equals(request.getPlanStatus())){
+            entity.setPlanStatus((request.getPlanStatus()));
+        }
+
+        if(null!=request.getGender() && !"".equals(request.getGender())){
+            entity.setGender((request.getGender()));
+        }
+        return planRepo.findAll(Example.of(entity));
     }
 
     @Override

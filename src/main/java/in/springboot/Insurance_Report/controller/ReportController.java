@@ -15,16 +15,23 @@ public class ReportController {
     @Autowired
     private ReportService service;
 
-    @PostMapping("/searchrequest")
-    public String handleSearch(SearchRequest searchRequest, Model model){
+    @PostMapping("/search")
+    public String handleSearch(@ModelAttribute("search") SearchRequest searchRequest, Model model){
 
-
+        System.out.println(searchRequest);
+        model.addAttribute("plans", service.getPlans(searchRequest));
 
         init(model);
 
         return "index";
     }
 
+
+    /**
+     * This method is used to load index page
+     * @param model
+     * @return String
+     */
     @GetMapping("/")
     public String indexPage(Model model){
 
@@ -38,5 +45,6 @@ public class ReportController {
     private void init(Model model) {
         model.addAttribute("getplannames", service.getPlanName());
         model.addAttribute("getplanstatus", service.getPlanStatus());
+//        model.addAttribute("plans", service.getPlans());
     }
 }
