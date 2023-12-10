@@ -21,3 +21,17 @@ spring:
       suffix: .jsp
 
 
+#  mail starter smtp configuration
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: gaurav.sirali@gmail.com
+    password: gkyfnuwzmmcriihs
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+
