@@ -68,6 +68,7 @@ public class ReportServiceImpl implements ReportService {
         headerRow.createCell(4).setCellValue("Plan Status");
         headerRow.createCell(5).setCellValue("Plan Start Date");
         headerRow.createCell(6).setCellValue("Plan End Date");
+        headerRow.createCell(7).setCellValue("Benefit Amt");
 
         List<CitizenPlan> records = planRepo.findAll();
 
@@ -80,8 +81,24 @@ public class ReportServiceImpl implements ReportService {
             dataRows.createCell(2).setCellValue(plan.getGender());
             dataRows.createCell(3).setCellValue(plan.getPlanName());
             dataRows.createCell(4).setCellValue(plan.getPlanStatus());
-            dataRows.createCell(5).setCellValue(plan.getPlanStartDate());
-            dataRows.createCell(6).setCellValue(plan.getPlanEndDate());
+
+            if(null != plan.getPlanStartDate()){
+                dataRows.createCell(5).setCellValue(plan.getPlanStartDate()+"");
+            }else{
+                dataRows.createCell(5).setCellValue("N/A");
+            }
+
+            if(null != plan.getPlanEndDate()){
+                dataRows.createCell(5).setCellValue(plan.getPlanEndDate()+"");
+            }else{
+                dataRows.createCell(5).setCellValue("N/A");
+            }
+
+            if(null != plan.getBenefitAmt()){
+                dataRows.createCell(5).setCellValue(plan.getBenefitAmt()+"");
+            }else{
+                dataRows.createCell(5).setCellValue("N/A");
+            }
 
             dataRow++;
         }
