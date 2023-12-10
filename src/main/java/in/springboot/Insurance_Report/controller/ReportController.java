@@ -20,10 +20,15 @@ public class ReportController {
     @GetMapping("/excel")
     public void excelExport(HttpServletResponse response) throws Exception{
         response.setContentType("application/octet-stream");
-
         response.addHeader("content-Disposition", "attachment;filename=plans.xls");
-
         service.exportToExcel(response);
+    }
+
+    @GetMapping("/pdf")
+    public void pdfExport(HttpServletResponse response) throws Exception{
+        response.setContentType("application/pdf");
+        response.addHeader("content-Disposition", "attachment;filename=plans.pdf");
+        service.exportToPdf(response);
     }
 
     @PostMapping("/search")
